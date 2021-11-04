@@ -35,27 +35,22 @@ const CharactersTable = () => {
             name: 'Films',
             selector: row => row.films,
         },
-
     ];
 
     useEffect(() => {
         async function getSwapi() {
             const peopleRes = await axios.get(`https://swapi.dev/api/people/?page=${page}`)
             for (const character of peopleRes.data.results) {
-                if (character) {
                 const homeWorldUrl = character.homeworld
                 const homeworldRes = await axios.get(homeWorldUrl)
                 character.homeworld = homeworldRes.data.name
                 characters.push(character)
-            }}
+            }
             setCharacters(characters)
             setTotalRows(peopleRes.data.count)
         }
         getSwapi()
-    }, [page,characters])
-    useEffect(()=>{
-
-    })
+    }, [page, characters])
 
     return (
         <>
@@ -74,7 +69,6 @@ const CharactersTable = () => {
             />
         </>
     )
-
 }
 
 export default CharactersTable
