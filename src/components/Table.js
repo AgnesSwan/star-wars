@@ -5,6 +5,7 @@ const CharactersTable = () => {
     const [characters, setCharacters] = useState([])
     const [page, setPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
+    const [loading, setLoading] = useState(false);
 
     const columns = [
         {
@@ -39,23 +40,24 @@ const CharactersTable = () => {
 
     useEffect(() => {
         async function getSwapi() {
-            const peopleRes = await axios.get(`https://swapi.dev/api/people/?page=${page}`)
-            for (const character of peopleRes.data.results) {
-                const homeWorldUrl = character.homeworld
-                const homeworldRes = await axios.get(homeWorldUrl)
-                character.homeworld = homeworldRes.data.name
-                characters.push(character)
-            }
-            setCharacters(characters)
-            setTotalRows(peopleRes.data.count)
+            setLoading(true)
+            const peopleResponse = await axios.get(`https://swapi.dev/api/people/?page=${page}`)
+            for (const character of peopleResponse.data.results) {
+                const homeworld_url = character.homeworld;
+                const homeWorldResponse = await axios.get(homeworld_url);
+                character.homeworld = homeWorldResponse.data.name;
+              }
+              setLoading(false)
+              setCharacters(peopleResponse.data.results)
+              setTotalRows(peopleResponse.data.count)
         }
         getSwapi()
-    }, [page, characters])
+    }, [page])
 
     return (
         <>
             <DataTable
-                title="Users"
+                title="Characters of Star Wars"
                 columns={columns}
                 data={characters}
                 highlightOnHover
@@ -66,6 +68,7 @@ const CharactersTable = () => {
                     noRowsPerPage: true
                 }}
                 onChangePage={page => setPage(page)}
+                progressPending={loading}                
             />
         </>
     )
