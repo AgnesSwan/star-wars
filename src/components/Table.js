@@ -1,11 +1,13 @@
 import axios from "axios"
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useMemo, useState } from "react"
 import DataTable from "react-data-table-component"
 const CharactersTable = () => {
     const [characters, setCharacters] = useState([])
     const [page, setPage] = useState(1);
     const [totalRows, setTotalRows] = useState(0);
     const [loading, setLoading] = useState(false);
+    const [searchText, setSearchText] = useState('');
+
 
     const columns = [
         {
@@ -37,6 +39,14 @@ const CharactersTable = () => {
             selector: row => row.films,
         },
     ];
+const filteredItems = characters.filter(
+		character => character.name && character.name.toLowerCase().includes(searchText.toLowerCase()),
+	);
+const subHeaderComponentSearch= useMemo(()=>{
+    return (
+    <input type="search" placeholder="Search.." onChange={(e)=>setSearchText(e.target.value)} />
+    )
+},[])
 
     useEffect(() => {
         async function getSwapi() {
@@ -59,7 +69,7 @@ const CharactersTable = () => {
             <DataTable
                 title="Characters of Star Wars"
                 columns={columns}
-                data={characters}
+                data={filteredItems}
                 highlightOnHover
                 pagination
                 paginationServer
@@ -68,7 +78,9 @@ const CharactersTable = () => {
                     noRowsPerPage: true
                 }}
                 onChangePage={page => setPage(page)}
-                progressPending={loading}                
+                progressPending={loading} 
+                subHeader
+                subHeaderComponent={subHeaderComponentSearch}               
             />
         </>
     )
