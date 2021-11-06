@@ -1,6 +1,7 @@
 import axios from "axios"
 import React, { useEffect, useMemo, useState } from "react"
 import DataTable from "react-data-table-component"
+import ExpanableComponent from "./ExpanableComponent"
 
 const CharactersTable = () => {
     const [characters, setCharacters] = useState([])
@@ -34,21 +35,7 @@ const CharactersTable = () => {
             name: 'Mass',
             selector: row => row.mass,
         },
-        {
-            name: 'Films',
-            selector: row => row.films.map(film => <li>{film.title}</li>),
-        },
     ]
-
-    const filteredItems = characters.filter(
-        character => character.name && character.name.toLowerCase().includes(searchText.toLowerCase()),
-    )
-
-    const subHeaderComponentSearch = useMemo(() => {
-        return (
-            <input type="search" placeholder="Search.." onChange={(e) => setSearchText(e.target.value)} />
-        )
-    }, [])
 
     useEffect(() => {
         fetchAndDisplay()
@@ -85,8 +72,19 @@ const CharactersTable = () => {
         )
     }
 
+    const filteredItems = characters.filter(
+        character => character.name && character.name.toLowerCase().includes(searchText.toLowerCase()),
+    )
+
+    const subHeaderComponentSearch = useMemo(() => {
+        return (
+            <input type="search" placeholder="Search.." onChange={(e) => setSearchText(e.target.value)} />
+        )
+    }, [])
+
     return (
         <>
+            {console.log(filteredItems)}
             <DataTable
                 title="Characters of Star Wars"
                 columns={columns}
@@ -102,6 +100,8 @@ const CharactersTable = () => {
                 progressPending={loading}
                 subHeader
                 subHeaderComponent={subHeaderComponentSearch}
+                expandableRows
+                expandableRowsComponent={ExpanableComponent}
             />
         </>
     )
