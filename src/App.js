@@ -1,4 +1,4 @@
-import CharactersTable from "./components/Table"
+import CharactersTable from "./components/CharactersTable"
 
 function App() {
   return (
