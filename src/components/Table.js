@@ -1,6 +1,7 @@
 import axios from "axios"
 import React, { useEffect, useMemo, useState } from "react"
 import DataTable from "react-data-table-component"
+import customStyles from "./customStylesTable"
 import ExpanableComponent from "./ExpanableComponent"
 
 const CharactersTable = () => {
@@ -29,11 +30,11 @@ const CharactersTable = () => {
         },
         {
             name: 'Height',
-            selector: row => row.height,
+            selector: row => row.height + ' cm',
         },
         {
             name: 'Mass',
-            selector: row => row.mass,
+            selector: row => row.mass + ' kg',
         },
     ]
 
@@ -83,8 +84,7 @@ const CharactersTable = () => {
     }, [])
 
     return (
-        <>
-            {console.log(filteredItems)}
+        <div className="m-8">
             <DataTable
                 title="Characters of Star Wars"
                 columns={columns}
@@ -102,8 +102,9 @@ const CharactersTable = () => {
                 subHeaderComponent={subHeaderComponentSearch}
                 expandableRows
                 expandableRowsComponent={ExpanableComponent}
+                customStyles={customStyles}
             />
-        </>
+        </div>
     )
 }
 
