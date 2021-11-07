@@ -78,7 +78,7 @@ const CharactersTable = () => {
 
     const subHeaderComponentSearch = useMemo(() => {
         return (
-            <input type="search" placeholder="Search.." onChange={(e) => setSearchText(e.target.value)} />
+            <input type="search" placeholder="Search by name" onChange={(e) => setSearchText(e.target.value)} className="border-b border-gray-200 p-3 m-6 focus:outline-none focus:border-yellow-200" />
         )
     }, [])
 
