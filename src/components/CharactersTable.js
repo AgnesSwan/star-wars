@@ -40,11 +40,13 @@ const CharactersTable = () => {
 
     useEffect(() => {
         fetchAndDisplay()
-    }, [page])
+    }, [page, searchText])
 
     const fetchAndDisplay = async () => {
         setLoading(true)
-        const res = await axios.get(`https://swapi.dev/api/people/?page=${page}`)
+        let res
+        if (searchText === '') res = await axios.get(`https://swapi.dev/api/people/?page=${page}`)
+        else res = await axios.get(`https://swapi.dev/api/people/?search=${searchText}`)
         await displayPeople(res.data.results)
         setTotalRows(res.data.count)
         setLoading(false)
@@ -73,10 +75,6 @@ const CharactersTable = () => {
         )
     }
 
-    const filteredItems = characters.filter(
-        character => character.name && character.name.toLowerCase().includes(searchText.toLowerCase()),
-    )
-
     const subHeaderComponentSearch = useMemo(() => {
         return (
             <input type="search" placeholder="Search by name" onChange={(e) => setSearchText(e.target.value)} className="border-b border-gray-200 p-3 m-6 focus:outline-none focus:border-yellow-200" />
@@ -88,7 +86,7 @@ const CharactersTable = () => {
             <DataTable
                 title="Characters of Star Wars"
                 columns={columns}
-                data={filteredItems}
+                data={characters}
                 highlightOnHover
                 pagination
                 paginationServer
